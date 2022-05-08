@@ -1,9 +1,10 @@
 import serial
 import time
-import math
+#import math
 ser = serial.Serial('COM5', 9600, timeout=0)
 cm = 0
 angle = 0
+anglePerStep = 0.176
 i = 1
 flag = 0
 # f = open("base.txt", "a")
@@ -13,7 +14,8 @@ flag = 0
 while(1):
     time.sleep(2)
     for i in range (1, 2049):
-        ser.write(str(i).encode('utf-8'))
+        ser.write('1'.encode('utf-8'))
+        angle = anglePerStep * i
         #ser.write(i)
         #time.sleep(0.04)
         flag = 0
@@ -21,6 +23,7 @@ while(1):
             if (ser.in_waiting > 0):
                 serialString = ser.readline()
                 print(serialString)
+                cm = int(serialString)
                 flag = 1
 
     # ser.write(b'1')  # write a string
