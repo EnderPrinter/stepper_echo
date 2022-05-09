@@ -1,6 +1,6 @@
 import serial
 import time
-
+import matplotlib.pyplot as plt
 # import math
 import numpy as np
 
@@ -23,13 +23,14 @@ f.close()
 
 time.sleep(2)
 for i in range(1, 1025):
+    # print(round(np.sin(np.radians(30)), 1))
     ser.write("1".encode("utf-8"))  # write 1 to arduino to do 1 step
     angle = anglePerStep * i        # calculate angle
     flag = 0
     while (flag == 0):  # wait for answer
         if (ser.in_waiting > 0):
             serialString = ser.readline()  # receive len from  arduino's echo
-            # print(serialString)
+            print(serialString)
             cm = int(serialString)
             flag = 1                       # update flag after we got everything
 
@@ -55,5 +56,11 @@ for i in range(1, 1025):
     f.write(angle + ";")
     f.write(str(cm) + "\n")
     f.close()
-ser.write("0".encode("utf-8"))  # write 0 to do 180 back
-# print(np.sin(30))
+ser.write("0".encode("utf-8"))  # write 0 to rotate 180 back
+
+for i in range(1, 1025):
+    y = cms[i] * np.sin(np.radians(angles[i])) + 200  # y = len * sin(α)
+    x = 200 - cms[i] * np.cos(np.radians(angles[i]))   # x = len * cos(α)
+    x1, y1 = [200, x], [200, y]
+    plt.plot(x1, y1, marker='o')
+plt.show()
