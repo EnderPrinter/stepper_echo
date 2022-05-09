@@ -33,6 +33,7 @@ for i in range(1, 1025):
             print(serialString)
             cm = int(serialString)
             flag = 1                       # update flag after we got everything
+    # if len is bigger than 200 cm we ignore it
     if cm > 200:
         cm = 0
     angles[i] = angle   # write data into array
