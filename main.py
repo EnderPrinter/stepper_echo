@@ -1,7 +1,6 @@
 import serial
 import time
 import matplotlib.pyplot as plt
-# import math
 import numpy as np
 
 # create 1024 digit arrays
