@@ -11,7 +11,7 @@ cms = np.empty(MAXSIZE)
 ser = serial.Serial('COM5', 9600, timeout=0)
 cm = 0
 angle = 0
-anglePerStep = 0.176
+anglePerStep = 0.176  # one step in stepper motor at full step mode is 0.176°
 i = 1
 flag = 0
 
@@ -44,11 +44,12 @@ for i in range(1, 1025):
     f.write(angle + ";")
     f.write(str(cm) + "\n")
     f.close()
-ser.write("0".encode("utf-8"))  # write 0 to rotate 180 back
+ser.write("0".encode("utf-8"))  # write 0 to rotate 180° back
 
+# build a graph from 1024 lines (1024 steps is 180°)
 for i in range(1, 1025):
-    y = cms[i] * np.sin(np.radians(angles[i])) + 200  # y = len * sin(α)
-    x = 200 - cms[i] * np.cos(np.radians(angles[i]))   #
+    y = cms[i] * np.sin(np.radians(angles[i])) + 200  # y = len * sin(α) + 200
+    x = 200 - cms[i] * np.cos(np.radians(angles[i]))  # x = 200 - len * cos(α)
     x1, y1 = [200, x], [200, y]
     plt.plot(x1, y1, marker='o')
 plt.show()
