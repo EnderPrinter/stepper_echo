@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # create 1024 digit arrays
-MAXSIZE = 1025
-angles = np.empty(MAXSIZE)
-cms = np.empty(MAXSIZE)
+angles = np.empty(1025)   # create empty arrays with 1025 len
+cms = np.empty(1025)      # create empty arrays with 1025 len
+
+# init serial
 ser = serial.Serial('COM5', 9600, timeout=0)
-cm = 0
-angle = 0
+
+# declare variables
+cm, angle, i, flag = 0, 0, 0, 0
 anglePerStep = 0.176  # one step in stepper motor at full step mode is 0.176°
-i = 1
-flag = 0
 
 # begin database
 f = open("base.txt", "w")
@@ -23,11 +23,10 @@ f.close()
 
 time.sleep(2)
 for i in range(1, 1025):
-    # print(round(np.sin(np.radians(30)), 1))
     ser.write("1".encode("utf-8"))  # write 1 to arduino to do 1 step
     angle = anglePerStep * i        # calculate angle
     flag = 0
-    while flag == 0:  # wait for answer
+    while flag == 0:  # wait for answer before continuing
         if ser.in_waiting > 0:
             serialString = ser.readline()  # receive len from  arduino's echo
             print(serialString)
