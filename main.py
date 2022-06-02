@@ -10,7 +10,8 @@ cms = np.empty(1025)      # create empty arrays with 1025 len
 angles_and_distance = {}    # create dictionary
 
 # init serial
-ser = serial.Serial('COM4', 115200, timeout=0)
+ser = serial.Serial('COM3', 115200, timeout=0)
+serCar = serial.Serial('COM7', 115200, timeout=0)
 # time.sleep(10)
 # declare variables
 cm, angle, i, flag = 0, 0, 0, 0
@@ -58,4 +59,7 @@ for i in range(1, 33):
     plt.plot(x1, y1, marker='o')
 plt.show()
 if angles_and_distance[512] > 5:
-    print("go")
+    print('go')
+    serCar.write("F 100 255".encode("utf-8"))  # write FWD command to drive forward
+if angles_and_distance[32] > 5:
+    serCar.write("L 100 255".encode("utf-8"))  # write FWD command to drive forward
