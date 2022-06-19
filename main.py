@@ -3,6 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 # create 1024 digit arrays
 angles = np.empty(1025)   # create empty arrays with 1025 len
 cms = np.empty(1025)      # create empty arrays with 1025 len
@@ -10,8 +11,8 @@ cms = np.empty(1025)      # create empty arrays with 1025 len
 angles_and_distance = {}    # create dictionary
 
 # init serial
-ser = serial.Serial('COM3', 115200, timeout=0)
-serCar = serial.Serial('COM7', 115200, timeout=0)
+ser = serial.Serial('COM8', 115200, timeout=0)
+# serCar = serial.Serial('COM7', 115200, timeout=0)
 # time.sleep(10)
 # declare variables
 cm, angle, i, flag = 0, 0, 0, 0
@@ -24,9 +25,9 @@ f.write("len" + "\n")
 f.close()
 
 # time.sleep(2)
-for i in range(1, 33):
+for i in range(0, 33):
     ser.write("1\n".encode("utf-8"))  # write 1 to arduino to do 1 step
-    time.sleep(0.18)
+    time.sleep(0.19)
     angle = anglePerStep * i        # calculate angle
     flag = 0
     while flag == 0:  # wait for answer before continuing
@@ -52,14 +53,21 @@ for i in range(1, 33):
 ser.write("0".encode("utf-8"))  # write 0 to rotate 180° back
 
 # build a graph from 1024 lines (1024 steps is 180°)
-for i in range(1, 33):
+for i in range(0, 33):
     y = cms[i] * np.sin(np.radians(angles[i])) + 200  # y = len * sin(α) + 200
     x = 200 - cms[i] * np.cos(np.radians(angles[i]))  # x = 200 - len * cos(α)
     x1, y1 = [200, x], [200, y]
     plt.plot(x1, y1, marker='o')
 plt.show()
+ser.close()
+serCar = serial.Serial('COM13', 115200, timeout=0)
+serCar.write("F 100 100\n".encode("utf-8"))  # write COMMAND to arduino to RUN
 if angles_and_distance[512] > 5:
-    print('go')
-    serCar.write("F 100 255".encode("utf-8"))  # write FWD command to drive forward
-if angles_and_distance[32] > 5:
-    serCar.write("L 100 255".encode("utf-8"))  # write FWD command to drive forward
+    print('goF')
+    serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
+elif angles_and_distance[0] > 5:
+    print('goL')
+    serCar.write("L 100 255\n".encode("utf-8"))  # write LWD command to drive forward
+elif angles_and_distance[1024] > 5:
+    print('goR')
+    serCar.write("L 100 255\n".encode("utf-8"))  # write RWD command to drive forward
