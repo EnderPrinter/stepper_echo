@@ -52,7 +52,7 @@ for i in range(0, 33):
     f.close()
     step = float(angle) / 0.176
     angles_and_distance[round(step)] = int(cm)
-ser.write("0".encode("utf-8"))  # write 0 to rotate 180° back
+ser.write("0\n".encode("utf-8"))  # write 0 to rotate 180° back
 
 # build a graph from 1024 lines (1024 steps is 180°)
 for i in range(0, 33):
@@ -62,9 +62,7 @@ for i in range(0, 33):
     plt.plot(x1, y1, marker='o')
 ser.close()
 
-time.sleep(5)
 serCar = serial.Serial('COM6', 115200, timeout=0)
-time.sleep(5)
 # serCar.write("F 100 100\n".encode("utf-8"))  # write COMMAND to arduino to RUN
 if angles_and_distance[512] > angles_and_distance[0] and angles_and_distance[1024]:
     print('goF')
