@@ -70,9 +70,13 @@ if angles_and_distance[512] > angles_and_distance[0] and angles_and_distance[102
 elif angles_and_distance[0] > angles_and_distance[1024]:
     print('goL')
     serCar.write("L 100 255\n".encode("utf-8"))  # write RWD command to drive forward
+    time.sleep(1)
+    serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
 elif angles_and_distance[1024] > angles_and_distance[0]:
     print('goR')
     serCar.write("R 100 255\n".encode("utf-8"))  # write RWD command to drive forward
+    time.sleep(1)
+    serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
 else:
     print('goF')
     serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
