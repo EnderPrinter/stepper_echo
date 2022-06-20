@@ -5,13 +5,15 @@ import numpy as np
 
 
 # create 1024 digit arrays
+
+
 angles = np.empty(1025)   # create empty arrays with 1025 len
 cms = np.empty(1025)      # create empty arrays with 1025 len
 
 angles_and_distance = {}    # create dictionary
 
 # init serial
-ser = serial.Serial('COM8', 115200, timeout=0)
+ser = serial.Serial('COM4', 115200, timeout=0)
 # serCar = serial.Serial('COM7', 115200, timeout=0)
 # time.sleep(10)
 # declare variables
@@ -58,16 +60,24 @@ for i in range(0, 33):
     x = 200 - cms[i] * np.cos(np.radians(angles[i]))  # x = 200 - len * cos(α)
     x1, y1 = [200, x], [200, y]
     plt.plot(x1, y1, marker='o')
-plt.show()
 ser.close()
-serCar = serial.Serial('COM13', 115200, timeout=0)
-serCar.write("F 100 100\n".encode("utf-8"))  # write COMMAND to arduino to RUN
-if angles_and_distance[512] > 5:
+
+time.sleep(5)
+serCar = serial.Serial('COM6', 115200, timeout=0)
+time.sleep(5)
+# serCar.write("F 100 100\n".encode("utf-8"))  # write COMMAND to arduino to RUN
+if angles_and_distance[512] > angles_and_distance[0] and angles_and_distance[1024]:
     print('goF')
     serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
-elif angles_and_distance[0] > 5:
+elif angles_and_distance[0] > angles_and_distance[1024]:
     print('goL')
-    serCar.write("L 100 255\n".encode("utf-8"))  # write LWD command to drive forward
-elif angles_and_distance[1024] > 5:
-    print('goR')
     serCar.write("L 100 255\n".encode("utf-8"))  # write RWD command to drive forward
+elif angles_and_distance[1024] > angles_and_distance[0]:
+    print('goR')
+    serCar.write("R 100 255\n".encode("utf-8"))  # write RWD command to drive forward
+else:
+    print('goF')
+    serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
+serCar.close()
+
+plt.show()
