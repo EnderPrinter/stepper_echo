@@ -27,7 +27,7 @@ f.write("len" + "\n")
 f.close()
 
 # time.sleep(2)
-for i in range(0, 33):
+for i in range(0, 32):
     ser.write("1\n".encode("utf-8"))  # write 1 to arduino to do 1 step
     time.sleep(0.19)
     angle = anglePerStep * i        # calculate angle
@@ -55,7 +55,7 @@ for i in range(0, 33):
 ser.write("0\n".encode("utf-8"))  # write 0 to rotate 180° back
 
 # build a graph from 1024 lines (1024 steps is 180°)
-for i in range(0, 33):
+for i in range(0, 32):
     y = cms[i] * np.sin(np.radians(angles[i])) + 200  # y = len * sin(α) + 200
     x = 200 - cms[i] * np.cos(np.radians(angles[i]))  # x = 200 - len * cos(α)
     x1, y1 = [200, x], [200, y]
@@ -63,18 +63,22 @@ for i in range(0, 33):
 ser.close()
 
 serCar = serial.Serial('COM6', 115200, timeout=0)
+
 # serCar.write("F 100 100\n".encode("utf-8"))  # write COMMAND to arduino to RUN
-if angles_and_distance[512] > angles_and_distance[0] and angles_and_distance[1024]:
+if angles_and_distance[512] > 20:
+    print('goF')
+    serCar.write("F 200 255\n".encode("utf-8"))  # write FWD command to drive forward
+elif angles_and_distance[512] > angles_and_distance[0] and angles_and_distance[992]:
     print('goF')
     serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
-elif angles_and_distance[0] > angles_and_distance[1024]:
+elif angles_and_distance[0] > angles_and_distance[992]:
     print('goL')
-    serCar.write("L 100 255\n".encode("utf-8"))  # write RWD command to drive forward
+    serCar.write("L 200 255\n".encode("utf-8"))  # write RWD command to drive forward
     time.sleep(1)
     serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
-elif angles_and_distance[1024] > angles_and_distance[0]:
+elif angles_and_distance[992] > angles_and_distance[0]:
     print('goR')
-    serCar.write("R 100 255\n".encode("utf-8"))  # write RWD command to drive forward
+    serCar.write("R 200 255\n".encode("utf-8"))  # write RWD command to drive forward
     time.sleep(1)
     serCar.write("F 100 255\n".encode("utf-8"))  # write FWD command to drive forward
 else:
